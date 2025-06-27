@@ -28,6 +28,10 @@ The raw and processed datasets used in this study are available via Zenodo (DOI 
 ## Dependencies & Acknowledgements
 
 This repository makes use of several third-party tools and libraries:
+- **ODAS Processing Software** – Used to process microstructure data collected with Rockland Scientific instruments  
+  https://rocklandscientific.com/  
+  Please cite: *Rockland Scientific International Inc. (2023). ODAS Processing Software, Version 5.4.1. Victoria, Canada.  
+  Instruments and software provided under license from Rockland Scientific.
 
 - **M_Map** – A mapping toolbox for MATLAB developed by Rich Pawlowicz  
   https://www.eoas.ubc.ca/~rich/map.html  
