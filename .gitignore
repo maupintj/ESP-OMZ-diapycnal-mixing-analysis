@@ -1,0 +1,45 @@
+# ====================
+# Python
+# ====================
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.log
+.env
+.venv/
+.ipynb_checkpoints/
+
+# ====================
+# MATLAB
+# ====================
+*.asv
+*.m~
+*.mat
+*.fig
+*.mdl
+*.slx
+*.mex*
+
+# ====================
+# macOS / iCloud
+# ====================
+.DS_Store
+*.icloud
+
+# ====================
+# Data and Private Tools
+# ====================
+data/raw/
+ODAS/
+*.zip
+*.nc
+*.h5
+*.bin
+*.csv
+*.P
+*.p
+
+# ====================
+# Office / Presentation Files
+# ====================
+*.pptx
