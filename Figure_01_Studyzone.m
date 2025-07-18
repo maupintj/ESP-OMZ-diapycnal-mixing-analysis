@@ -1,7 +1,7 @@
 clearvars -except cl
 close all;
 cl = [11, 17];
-sf = true;
+sf = false;
 
 % Directories
 data_dir = '/Volumes/SSDext/Tesis_Master_respaldo/Tesis Magister/DATOS/';

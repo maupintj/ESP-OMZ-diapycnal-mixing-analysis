@@ -2,7 +2,7 @@ close all; clear
 data_dir='/Volumes/SSDext/Tesis_Master_respaldo/Tesis Magister/DATOS/';
 file=dir(fullfile(data_dir,'GLIDER/CP/CP_2*'));
 figure_dir = '/Users/xpintm/Library/Mobile Documents/com~apple~CloudDocs/PHD/OMZ_Chile/Paper/Figures';
-sf=false;  % Save figure flag
+sf=true;  % Save figure flag
 gebco_file = fullfile(data_dir, 'GEBCO', 'gebco_2023_n-34.5_s-38.8_w-76.5_e-71.5.nc');
 % Bathymetry
 band1 = ncread(gebco_file, 'elevation', [1 1], [1200 1032]);
@@ -20,8 +20,9 @@ vx1 = vx(1:aux); vy1=vy(1:aux);
 lo2 = lo(aux+1:end); la2=la(aux+1:end);
 vx2 = vx(aux+1:end); vy2=vy(aux+1:end);
 
-figure()
-set(gcf,'position',[10,10,500,500])
+fig = figure;
+fig.Units = 'inches';
+fig.Position = [1 1 4 3];
 m_proj('mercator','lon',[-76 -72],'lat',[-38 -35]);
 m_gshhs_h('patch',[.5 .5 .5]);
 m_grid('box','out','tickdir','in');
@@ -31,9 +32,9 @@ m_quiver(lo1,la1,vx1,vy1,2,'k')
 m_plot(lo2,la2,'ro','markersize',5)
 quiver(lo2,la2,vx2,vy2,2,'r')
 f=gcf;
-pause(1)
+%pause(1)
 if sf
-    exportgraphics(f,fullfile(FolderName,[file_name(1:15) '_MAP.png']),'Resolution',400,'BackgroundColor','white')
+    exportgraphics(f,fullfile(figure_dir,[file_name(1:15) '_MAP.png']),'Resolution',400,'BackgroundColor','white')
 end
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -149,8 +150,12 @@ Tu2(nanaux)=NaN;
 load(fullfile(data_dir,'Tu_colormap.mat'))
 
 
+fig=figure()
 tiledlayout(4,2,"TileSpacing","compact");
-set(gcf,'position',[10,10,1200,700])
+%set(gcf,'position',[10,10,1200,700])
+fig.Units = 'inches';
+fig.Position = [1 1 7 3.5];
+
 
 nexttile
 pcolor(xi,(1:10:800),CT1i(1:10:800,:)); shading interp 
@@ -346,10 +351,13 @@ xlim([-74.5 -73.2])
 ylim([0,750])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nexttile
+
 pcolor(xi,p_mid1,Tu1); shading interp 
-colormap(gca,Tu2_Vfinal); colorbar ; hold on; axis ij
+axis ij
+colmap=Tu2_Vfinal;
+colormap(gca,colmap); colorbar; 
 yticks([100 300 500 700])
-xlim([-74.5 -73.2])
+xticks([])
 %%%%%%%%%%%%%%%%%%%% make it beauty %%%%%%%%%%%%%%%%%%%
 y = [1000 1000 0 0];
 x = [-76.5 -73.1 -73.1 -76.5];
@@ -372,12 +380,14 @@ plot(lon_vec, bathy_vec, '-k', 'LineWidth', 1.5)
 %text(-73.55, 400, 'Continental Shelf', 'FontSize', 13, 'FontAngle', 'italic')
 xlim([-74.5 -73.2])
 ylim([0,750])
+xticks([-74.5, -74.1, -73.7 -73.3])
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 nexttile
 pcolor(xi,p_mid2,Tu2); shading interp 
 colormap(gca,Tu2_Vfinal); colorbar; hold on; axis ij
 yticks([100 300 500 700])
-xlim([-74.5 -73.2])
+xticks([])
 %%%%%%%%%%%%%%%%%%%% make it beauty %%%%%%%%%%%%%%%%%%%
 y = [1000 1000 0 0];
 x = [-76.5 -73.1 -73.1 -76.5];
@@ -400,11 +410,12 @@ plot(lon_vec, bathy_vec, '-k', 'LineWidth', 1.5)
 %text(-73.55, 400, 'Continental Shelf', 'FontSize', 13, 'FontAngle', 'italic')
 xlim([-74.5 -73.2])
 ylim([0,750])
+xticks([-74.5, -74.1, -73.7 -73.3])
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 f=gcf;
-pause(1)
+%pause(1)
 if sf
-    exportgraphics(f,fullfile(FolderName,[file_name(1:15) '.png']),'Resolution',400,'BackgroundColor','white')
+    exportgraphics(f,fullfile(figure_dir,[file_name(1:15) '.png']),'Resolution',400,'BackgroundColor','white')
 end
 end
 
