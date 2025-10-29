@@ -134,8 +134,8 @@ clabel(C,H,'color','m')
 contour(mlat,P(:,1),mOxi,[5 10 22],'LineWidth',1,'linecolor','m');
 set(gca,'YDir','reverse')
 clim([-90 90])
-contour(mlat,P(:,1),mRho,[25.8 27.1 27.3],'LineWidth',1,'linecolor','w');
-[C,H]=contour(mlat,P(:,1),mRho,[26.3 26.55 26.8],'LineWidth',1,'linecolor','w');
+%contour(mlat,P(:,1),mRho,[25.8 27.1 27.3],'LineWidth',1,'linecolor','w');
+[C,H]=contour(mlat,P(:,1),mRho,[26.3 26.55 26.8 27 27.15],'LineWidth',1,'linecolor','w');
 
 clabel(C,H,'color','w')
 y = [1000 1000 0 0];
@@ -156,7 +156,7 @@ hxl.Position(2) = 820;  % Move label closer to x-axis
 
 f=gcf;
 if sf
-    exportgraphics(f,fullfile(figure_dir,['Turner_ZMO.png']),'Resolution',800,'BackgroundColor','white')
+    %exportgraphics(f,fullfile(figure_dir,['Turner_ZMO.png']),'Resolution',800,'BackgroundColor','white')
 end
 %%
 close all; clear;

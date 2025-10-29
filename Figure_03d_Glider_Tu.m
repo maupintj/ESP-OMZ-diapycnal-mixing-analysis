@@ -10,7 +10,7 @@ lat = ncread(gebco_file, 'lat', [1], [1032]);
 lon = ncread(gebco_file, 'lon', [1], [1200]);
 levels = [-6000:1000:-1000, -1000:250:-250, -250:100:-10];
 
-for i3=1:length(file) %TU i3=5
+for i3=5%1:length(file) %TU i3=5
 file_name=file(i3).name;
 load(fullfile(file(i3).folder,file(i3).name));
 
@@ -466,8 +466,9 @@ clabel(C,H,'color','m')
 contour(xi,(1:800)',DO2i*44.63,[5 10 22],'LineWidth',1,'linecolor','m');
 set(gca,'YDir','reverse')
 clim([-90 90])
-contour(xi,(1:10:800)',PRO2i(1:10:800,:)-1000,[25.8 27 27.3],'LineWidth',1,'linecolor','w');
-[C,H]=contour(xi,(1:10:800)',PRO2i(1:10:800,:)-1000,[26.3 26.55 26.8],'LineWidth',1,'linecolor','w');
+%contour(xi,(1:10:800)',PRO2i(1:10:800,:)-1000,[25.8 27 27.3],'LineWidth',1,'linecolor','w');
+[C,H]=contour(xi,(1:10:800)',PRO2i(1:10:800,:)-1000,[26.3 26.55 26.8 27 27.15],'LineWidth',1,'linecolor','w');
+
 clabel(C,H,'color','w')
 
 y = [1000 1000 0 0];

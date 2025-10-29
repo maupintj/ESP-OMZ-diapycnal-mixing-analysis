@@ -98,11 +98,20 @@ for i1=1:7%numero de intervalos
 %     auxa=auxa-nanmean(auxa);
 %     auxb=beta_2020(I(i1).e);
 %     auxb=auxb-nanmean(auxb);
+    auxQC1=QC1_2020(I(i1).e);
+    auxQC2=QC1_2020(I(i1).e);
+    
     auxChi1=Chi1_2020(I(i1).e);
+    auxChi1(auxQC1>0)=nan;
     auxChi2=Chi2_2020(I(i1).e);
+    auxChi2(auxQC2>0)=nan;
     auxChi=mean([auxChi1,auxChi2],2,'omitnan');
+    
     auxe1=e1_2020(I(i1).e);
+    auxe1(auxQC1>0)=nan;
     auxe2=e2_2020(I(i1).e);
+    auxe2(auxQC1>0)=nan;
+    
     auxe=mean([auxe1,auxe2],2,'omitnan');
     %AJUSTE LINEAL
     p_TC=polyfit(auxP,auxTC,1);
@@ -226,11 +235,19 @@ for i1=1:7%numero de intervalos
 %     auxa=auxa-nanmean(auxa);
 %     auxb=beta_2021(I(i1).j);
 %     auxb=auxb-nanmean(auxb);
+    auxQC1=QC1_2021(I(i1).j);
+    auxQC2=QC1_2021(I(i1).j);
+    
     auxChi1=Chi1_2021(I(i1).j);
+    auxChi1(auxQC1>0)=nan;
     auxChi2=Chi2_2021(I(i1).j);
+    auxChi2(auxQC2>0)=nan;
     auxChi=mean([auxChi1,auxChi2],2,'omitnan');
+    
     auxe1=e1_2021(I(i1).j);
+    auxe1(auxQC1>0)=nan;
     auxe2=e2_2021(I(i1).j);
+    auxe2(auxQC1>0)=nan;
     auxe=mean([auxe1,auxe2],2,'omitnan');
     %AJUSTE LINEAL
     p_TC=polyfit(auxP,auxTC,1);
@@ -357,12 +374,21 @@ for i1=1:7%numero de intervalos
 %     auxa=auxa-nanmean(auxa);
 %     auxb=beta_2022(I(i1).o);
 %     auxb=auxb-nanmean(auxb);
+    auxQC1=QC1_2022(I(i1).o);
+    auxQC2=QC1_2022(I(i1).o);
+    
     auxChi1=Chi1_2022(I(i1).o);
+    auxChi1(auxQC1>0)=nan;
     auxChi2=Chi2_2022(I(i1).o);
+    auxChi2(auxQC2>0)=nan;
     auxChi=mean([auxChi1,auxChi2],2,'omitnan');
+    
     auxe1=e1_2022(I(i1).o);
+    auxe1(auxQC1>0)=nan;
     auxe2=e2_2022(I(i1).o);
+    auxe2(auxQC1>0)=nan;
     auxe=mean([auxe1,auxe2],2,'omitnan');
+
     %AJUSTE LINEAL
     p_TC=polyfit(auxP,auxTC,1);
     p_SA=polyfit(auxP,auxSA,1);
@@ -843,7 +869,7 @@ end
 
 
 %% SAVING IN TO TABLES
-table_name='finaltable_I_7dens.xlsx';
+table_name='finaltable_I_7dens_QC.xlsx';
 table_name=fullfile(figure_dir,table_name);
 if st 
     yvalues=["<-25.8[";"]25.80-26.10]";"]26.10-26.30]";"]26.30-26.55]";"]26.55-26.70]";"]26.70-26.80]";"]26.80->]"];
@@ -865,7 +891,7 @@ if st
     writetable(struct2table(Chif_std),table_name,'Sheet',2,'Range','W1');
 end
 
-table_name='finaltable_II_7dens.xlsx';
+table_name='finaltable_II_7dens_QC.xlsx';
 table_name=fullfile(figure_dir,table_name);
 if st 
     yvalues=["<-25.8[";"]25.80-26.10]";"]26.10-26.30]";"]26.30-26.55]";"]26.55-26.70]";"]26.70-26.80]";"]26.80->]"];
@@ -894,85 +920,3 @@ if st
 
 end
 %%
-% # New data provided by user corresponds to diapycnal O2 fluxes (not divergence)
-% # Values are in µmol m⁻² day⁻¹
-% 
-% flux_data = {
-%     "Interval": ["(1)", "(2)", "(3)", "(4)", "(5)", "(6)", "(7)"],
-%     "January 2020": [-1.581, -3.468, -22.261, -4.033, 7.245, 0.771, 8.654],
-%     "July 2021": [-7.188, -5.211, -13.962, -2.342, 4.019, 4.413, 17.742],
-%     "October 2022": [-0.203, -1.479, -1.732, -1.120, -0.617, 5.857, 1.617]
-% }
-% 
-% df_flux = pd.DataFrame(flux_data)
-% 
-% # Apply user-defined groupings
-% upper_jan_flux = df_flux.loc[df_flux["Interval"].isin(["(2)", "(3)", "(4)"]), "January 2020"]
-% lower_jan_flux = df_flux.loc[df_flux["Interval"].isin(["(5)", "(6)", "(7)"]), "January 2020"]
-% 
-% upper_jul_flux = df_flux.loc[df_flux["Interval"].isin(["(2)", "(3)", "(4)"]), "July 2021"]
-% lower_jul_flux = df_flux.loc[df_flux["Interval"].isin(["(5)", "(6)", "(7)"]), "July 2021"]
-% 
-% upper_oct_flux = df_flux.loc[df_flux["Interval"].isin(["(2)", "(3)", "(4)", "(5)"]), "October 2022"]
-% lower_oct_flux = df_flux.loc[df_flux["Interval"].isin(["(6)", "(7)"]), "October 2022"]
-% 
-% # Compute means
-% mean_fluxes = {
-%     "Upper Oxycline": [
-%         upper_jan_flux.mean(), 
-%         upper_jul_flux.mean(), 
-%         upper_oct_flux.mean()
-%     ],
-%     "Lower Oxycline": [
-%         lower_jan_flux.mean(), 
-%         lower_jul_flux.mean(), 
-%         lower_oct_flux.mean()
-%     ]
-% }
-% 
-% mean_flux_df = pd.DataFrame(mean_fluxes, index=["January 2020", "July 2021", "October 2022"])
-% df_flux_values = df_flux.set_index("Interval")
-% 
-% #tools.display_dataframe_to_user(name="Diapycnal Oxygen Flux and Campaign Means", dataframe=mean_flux_df)
-% 
-% df_flux_values
-% 
-% # Create DataFrames for each dataset using the user-provided values
-% index = ["(1)", "(2)", "(3)", "(4)", "(5)", "(6)", "(7)"]
-% 
-% Pt = pd.DataFrame({
-%     "January 2020": [1, 1, 1, 1, 0.74, 0.74, 0.73],
-%     "July 2021":    [1, 1, 1, 1, 0.83, 0.81, 0.81],
-%     "October 2022": [1, 1, 1, 1, 1.00, 0.85, 0.82]
-% }, index=index)
-% 
-% Pf = pd.DataFrame({
-%     "January 2020": [0, 0, 0, 0, 0.26, 0.26, 0.27],
-%     "July 2021":    [0, 0, 0, 0, 0.17, 0.19, 0.19],
-%     "October 2022": [0, 0, 0, 0, 0.00, 0.15, 0.18]
-% }, index=index)
-% 
-% Kst = pd.DataFrame({
-%     "January 2020": [1.58, 3.25, 7.69, 8.27, 117.48, 3.45, 13.03],
-%     "July 2021":    [5.14, 2.33, 6.86, 5.64, 204.22, 25.61, 28.97],
-%     "October 2022": [0.79, 0.73, 0.68, 1.17, 2.17, 37.32, 2.65]
-% }, index=index)
-% 
-% Ksf = pd.DataFrame({
-%     "January 2020": [0, 0, 0, 0, 439.79, 8.47, 40.96],
-%     "July 2021":    [0, 0, 0, 0, 539.66, 87.29, 24.94],
-%     "October 2022": [0, 0, 0, 0, 0.00, 107.72, 7.14]
-% }, index=index)
-% 
-% # Compute weighted diffusivity contributions for each layer and campaign
-% K_total = Pt * Kst + Pf * Ksf
-% 
-% # Calculate relative contribution of salt fingers
-% Ksf_contribution = (Pf * Ksf) / K_total
-% 
-% # Average contributions across lower oxycline intervals (5,6,7)
-% sf_contribution_means = Ksf_contribution.loc[["(5)", "(6)", "(7)"]].mean()
-% 
-% #tools.display_dataframe_to_user(name="Relative Contribution of Salt Fingering to Diapycnal Diffusivity", dataframe=Ksf_contribution)
-% 
-% sf_contribution_means
