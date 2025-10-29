@@ -38,8 +38,10 @@ uwind_obs = uwind(idxlon,idxlat,:);
 uwind_obs = nanmean(uwind_obs,1);
 uwind_obs = nanmean(squeeze(uwind_obs),1)';
 clear uwind
-Cd = 0.0026;
+U10=sqrt(uwind_obs.^2+vwind_obs.^2);
 p_air = 1.225; %kg/m3
+%Cd = (1.2 + 0.065 .* U10) * 1e-3;
+Cd= calculate_CD10n(U10);
 
 twind_obs = Cd.*p_air.*vwind_obs.*sqrt(uwind_obs.^2+vwind_obs.^2);
 % Find 5 previous days 
@@ -95,64 +97,65 @@ impulse_2022 = cumsum(twind_obs(idx),3600);
 
 
 %% Figure
-figure()
-set(gcf, 'Position', [10, 10, 600, 500])
-t = tiledlayout(3,1, 'TileSpacing', 'compact', 'Padding', 'compact');
-
-nexttile
-%yyaxis left
-patch([datenum(2020,1,6) datenum(2020,1,8) datenum(2020,1,8) datenum(2020,1,6)],...
-    [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
-hold on
-box on
-plot(time_era(idxtime1),twind_obs(idxtime1),'linewidth',2.5)
-line([datenum(2020,1,1) datenum(2020,1,10)],[0 0],'color','k','linestyle','--','linewidth',1.5)
-grid on
-ax = gca;
-ax.GridAlpha = 0.4;
-ylabel('Wind Stress (Pa)')
-ylim([-0.5 0.6])
-xlim([datenum(2020,1,1) datenum(2020,1,10)])
-set(ax, 'XTick', datenum(2020,1,1:10), 'XTickLabel', [], 'FontSize', 12)
-
-nexttile
-patch([datenum(2021,7,6) datenum(2021,7,8) datenum(2021,7,8) datenum(2021,7,6)],...
-    [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
-hold on
-box on
-plot(time_era(idxtime2),twind_obs(idxtime2),'linewidth',2.5)
-line([datenum(2021,7,1) datenum(2021,7,10)],[0 0],'color','k','linestyle','--','linewidth',1.5)
-grid on
-ax = gca;
-ax.GridAlpha = 0.4;
-ylabel('Wind Stress (Pa)')
-ylim([-0.5 0.6])
-set(gca,'XTick',datenum(2021,7,1:10), 'XTickLabel', [], 'FontSize', 12)
-xlim([datenum(2021,7,1) datenum(2021,7,10)])
-%ylim([12.8 14.1])
-
-nexttile
-%yyaxis left
-patch([datenum(2022,10,5) datenum(2022,10,7) datenum(2022,10,7) datenum(2022,10,5)],...
-    [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
-hold on
-box on
-ticks = [datenum(2022,9,30) datenum(2022,10,1) datenum(2022,10,2) datenum(2022,10,3) datenum(2022,10,4)...
-    datenum(2022,10,5) datenum(2022,10,6) datenum(2022,10,7) datenum(2022,10,8) datenum(2022,10,9)];
-plot(time_era(idxtime3),twind_obs(idxtime3),'linewidth',2.5)
-line([datenum(2022,9,1) datenum(2022,11,1)],[0 0],'color','k','linestyle','--','linewidth',1.5)
-grid on
-ax = gca;
-ax.GridAlpha = 0.4;
-xlabel('Days from campaing')
-ylabel('Wind Stress (Pa)')
-ylim([-0.5 0.6])
-xlim([datenum(2022,9,30) datenum(2022,10,9)])
-set(gca,'XTick',ticks, 'XTickLabel', (-5:4), 'FontSize', 12)
+% figure()
+% set(gcf, 'Position', [10, 10, 600, 500])
+% t = tiledlayout(3,1, 'TileSpacing', 'compact', 'Padding', 'compact');
+% 
+% nexttile
+% %yyaxis left
+% patch([datenum(2020,1,6) datenum(2020,1,8) datenum(2020,1,8) datenum(2020,1,6)],...
+%     [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
+% hold on
+% box on
+% plot(time_era(idxtime1),twind_obs(idxtime1),'linewidth',2.5)
+% line([datenum(2020,1,1) datenum(2020,1,10)],[0 0],'color','k','linestyle','--','linewidth',1.5)
+% grid on
+% ax = gca;
+% ax.GridAlpha = 0.4;
+% ylabel('Wind Stress (Pa)')
+% ylim([-0.5 0.6])
+% xlim([datenum(2020,1,1) datenum(2020,1,10)])
+% set(ax, 'XTick', datenum(2020,1,1:10), 'XTickLabel', [], 'FontSize', 12)
+% 
+% nexttile
+% patch([datenum(2021,7,6) datenum(2021,7,8) datenum(2021,7,8) datenum(2021,7,6)],...
+%     [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
+% hold on
+% box on
+% plot(time_era(idxtime2),twind_obs(idxtime2),'linewidth',2.5)
+% line([datenum(2021,7,1) datenum(2021,7,10)],[0 0],'color','k','linestyle','--','linewidth',1.5)
+% grid on
+% ax = gca;
+% ax.GridAlpha = 0.4;
+% ylabel('Wind Stress (Pa)')
+% ylim([-0.5 0.6])
+% set(gca,'XTick',datenum(2021,7,1:10), 'XTickLabel', [], 'FontSize', 12)
+% xlim([datenum(2021,7,1) datenum(2021,7,10)])
+% %ylim([12.8 14.1])
+% 
+% nexttile
+% %yyaxis left
+% patch([datenum(2022,10,5) datenum(2022,10,7) datenum(2022,10,7) datenum(2022,10,5)],...
+%     [-0.5 -0.5 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
+% hold on
+% box on
+% ticks = [datenum(2022,9,30) datenum(2022,10,1) datenum(2022,10,2) datenum(2022,10,3) datenum(2022,10,4)...
+%     datenum(2022,10,5) datenum(2022,10,6) datenum(2022,10,7) datenum(2022,10,8) datenum(2022,10,9)];
+% plot(time_era(idxtime3),twind_obs(idxtime3),'linewidth',2.5)
+% line([datenum(2022,9,1) datenum(2022,11,1)],[0 0],'color','k','linestyle','--','linewidth',1.5)
+% grid on
+% ax = gca;
+% ax.GridAlpha = 0.4;
+% xlabel('Days from campaing')
+% ylabel('Wind Stress (Pa)')
+% ylim([-0.5 0.6])
+% xlim([datenum(2022,9,30) datenum(2022,10,9)])
+% set(gca,'XTick',ticks, 'XTickLabel', (-5:4), 'FontSize', 12)
 
 %%
-figure()
-set(gcf, 'Position', [10, 10, 600, 400])
+fig = figure;
+fig.Units = 'inches';
+fig.Position = [1 1 7 3.2];
 patch([121 169 169 121],...
     [-0.4 -0.4 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
 hold on
@@ -163,38 +166,84 @@ plot(1:216,twind_obs(idxtime2),'linewidth',2.5)
 plot(1:216,twind_obs(idxtime3),'linewidth',2.5)
 line([0 217],[0 0],'color','k','linestyle','--','linewidth',1.5)
 ylabel('Wind Stress (Pa)')
-xlabel('Days since beginning of campaing')
-xlim([1 216])
+xlabel('Days since beginning of campaign')
+xlim([1 169])
+ylim([-0.4,0.4])
 ax = gca;
 ax.GridAlpha = 0.4;
 set(gca,'XTick',[1:24:216],'XTickLabel',[-5:1:4],'Fontsize',14)
 legend('January 2020','July 2021','October 2022','location','southwest','fontsize',14)
-
-%% Wind Impulse
-
-fig = figure;
-fig.Units = 'inches';
-fig.Position = [1 1 7 3.2];
-patch([121 169 169 121],...
-    [-0.4 -0.4 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
-hold on
-box on
-plot(1:169,impulse_2020,'linewidth',2.5)
-grid on
-plot(1:169,impulse_2021,'linewidth',2.5)
-plot(1:169,impulse_2022,'linewidth',2.5)
-line([0 170],[0 0],'color','k','linestyle','--','linewidth',1.5)
-ylabel('Wind Impulse (kg m^{-1} s^{-1})')
-xlabel('Days since beginning of campaing')
-xlim([1 169])
-ax = gca;
-ax.GridAlpha = 0.4;
-set(gca,'XTick',[1:24:169],'XTickLabel',[-5:1:2],'Fontsize',14)
-legend('January 2020','July 2021','October 2022','location','southwest','fontsize',14)
 f=gcf;
 
 if sf
-    exportgraphics(f,fullfile(figure_dir,['wind_impulse.png']),'Resolution',800,'BackgroundColor','white')
+    exportgraphics(f,fullfile(figure_dir,['wind_stress.png']),'Resolution',800,'BackgroundColor','white')
 end
 
 
+%% Wind Impulse
+% 
+% fig = figure;
+% fig.Units = 'inches';
+% fig.Position = [1 1 7 3.2];
+% patch([121 169 169 121],...
+%     [-0.4 -0.4 0.6 0.6], [.85 .85 .85],'FaceAlpha',0.6,'EdgeColor',[0.6350 0.0780 0.1840],'Linewidth',2,'HandleVisibility','off')
+% hold on
+% box on
+% plot(1:169,impulse_2020,'linewidth',2.5)
+% grid on
+% plot(1:169,impulse_2021,'linewidth',2.5)
+% plot(1:169,impulse_2022,'linewidth',2.5)
+% line([0 170],[0 0],'color','k','linestyle','--','linewidth',1.5)
+% ylabel('Wind Impulse (kg m^{-1} s^{-1})')
+% xlabel('Days since beginning of campaign')
+% xlim([1 169])
+% ax = gca;
+% ax.GridAlpha = 0.4;
+% set(gca,'XTick',[1:24:169],'XTickLabel',[-5:1:2],'Fontsize',14)
+% legend('January 2020','July 2021','October 2022','location','southwest','fontsize',14)
+% f=gcf;
+% 
+% if sf
+%     exportgraphics(f,fullfile(figure_dir,['wind_impulse.png']),'Resolution',800,'BackgroundColor','white')
+% end
+
+
+%%
+function CD10n = calculate_CD10n(U10n)
+% Calculates the 10-m neutral drag coefficient (CD10n) based on 
+% the piecewise formula provided by the user.
+%
+% INPUT:
+%   U10n = vector or scalar of 10-m neutral wind speeds (m/s)
+%
+% OUTPUT:
+%   CD10n = vector or scalar of the drag coefficient (unitless)
+
+% Initialize the output array with NaN (Not-a-Number)
+% This helps find wind speeds that don't fall into any category.
+CD10n_scaled = NaN(size(U10n));
+
+% --- Condition 1: Low wind speeds (3 <= U10n <= 6) ---
+% Create a logical mask for this wind speed range
+low_wind_mask = (U10n <= 6);
+
+% Apply the first formula ONLY to the elements identified by the mask
+CD10n_scaled(low_wind_mask) = 0.29 + (3.1 ./ U10n(low_wind_mask)) + (7.7 ./ U10n(low_wind_mask).^2);
+
+% --- Condition 2: High wind speeds (6 < U10n <= 26) ---
+% Create a logical mask for this wind speed range
+high_wind_mask = (U10n > 6) & (U10n <= 26);
+
+% Apply the second formula
+CD10n_scaled(high_wind_mask) = 0.60 + (0.070 .* U10n(high_wind_mask));
+
+% --- Final Step: Rescale ---
+% The formulas were for 1000*CD10n, so we divide by 1000
+CD10n = CD10n_scaled / 1000;
+
+% Optional: Warn if some inputs were outside the 3-26 m/s range
+if any(isnan(CD10n))
+    warning('Some input wind speeds were outside the valid 3-26 m/s range.');
+end
+
+end
